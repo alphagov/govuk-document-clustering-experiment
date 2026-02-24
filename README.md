@@ -10,3 +10,4 @@ Feasibility of using machine classification to improve GOV.UK taxonomy
 * Sign up at [Hugging Face](https://huggingface.co/) and create a token of type "Read".
 * Copy example environment file: `cp .env.example .env`.
 * Set value of `HF_TOKEN` in `.env` to the Hugging Face token.
+* Generate the suggested topics: `pipenv run python suggest_topics.py`

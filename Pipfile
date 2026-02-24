@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 python-dotenv = "*"
+beautifulsoup4 = "*"
+bertopic = "*"
 
 [dev-packages]
 
