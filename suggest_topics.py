@@ -53,12 +53,14 @@ representation_model = OpenAI(
 topic_model = BERTopic(
   vectorizer_model=vectorizer,
   representation_model=representation_model,
+  calculate_probabilities=True
 )
 topics, probs = topic_model.fit_transform(texts)
 
 topic_docs = defaultdict(list)
-for doc_id, topic_id in zip(doc_ids, topics):
-    topic_docs[topic_id].append(doc_id)
+for doc_id, topic_id, prob_array in zip(doc_ids, topics, probs):
+    doc_prob = prob_array[topic_id] if topic_id != -1 else 0
+    topic_docs[topic_id].append((doc_id, doc_prob))
 
 for topic_id in sorted(topic_docs):
   if topic_id == -1:
@@ -69,5 +71,5 @@ for topic_id in sorted(topic_docs):
 
   print(f"\nTopic {topic_id}  [{keywords}]:")
 
-  for doc_id in topic_docs[topic_id]:
-      print(f"  {doc_id}")
+  for doc_id, prob in topic_docs[topic_id]:
+      print(f"  {doc_id}  (prob={prob:.3f})")
