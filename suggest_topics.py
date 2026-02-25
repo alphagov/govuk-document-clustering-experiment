@@ -1,10 +1,13 @@
 from dotenv import load_dotenv
 
 import csv
+import os
 from bs4 import BeautifulSoup
 from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
 from collections import defaultdict
+from bertopic.representation import OpenAI
+from openai import OpenAI as OpenAIClient
 
 import transformers
 
@@ -36,8 +39,20 @@ vectorizer = CountVectorizer(
   ngram_range=(1,2)
 )
 
+client = OpenAIClient(
+  api_key=os.environ.get("OPENROUTER_API_KEY"),
+  base_url="https://openrouter.ai/api/v1",
+)
+
+representation_model = OpenAI(
+  client,
+  model="openai/gpt-4o-mini",
+  chat=True,
+)
+
 topic_model = BERTopic(
   vectorizer_model=vectorizer,
+  representation_model=representation_model,
 )
 topics, probs = topic_model.fit_transform(texts)
 
