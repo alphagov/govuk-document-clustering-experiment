@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import csv
 from bs4 import BeautifulSoup
 from bertopic import BERTopic
+from sklearn.feature_extraction.text import CountVectorizer
 
 import transformers
 
@@ -27,7 +28,16 @@ with open("input.csv", newline="", encoding="utf-8") as f:
 
 print(f"Loaded {len(texts)} documents")
 
-topic_model = BERTopic()
+vectorizer = CountVectorizer(
+  stop_words="english",
+  min_df=3,
+  max_df=0.9,
+  ngram_range=(1,2)
+)
+
+topic_model = BERTopic(
+  vectorizer_model=vectorizer,
+)
 topics, probs = topic_model.fit_transform(texts)
 
 for doc_id, topic_id in zip(doc_ids, topics):
