@@ -4,6 +4,7 @@ import csv
 from bs4 import BeautifulSoup
 from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
+from collections import defaultdict
 
 import transformers
 
@@ -40,11 +41,18 @@ topic_model = BERTopic(
 )
 topics, probs = topic_model.fit_transform(texts)
 
+topic_docs = defaultdict(list)
 for doc_id, topic_id in zip(doc_ids, topics):
-    if topic_id == -1:
-        keywords = "outlier"
-    else:
-        label = topic_model.get_topic(topic_id)
-        keywords = ", ".join(keyword for keyword, _ in label)
+    topic_docs[topic_id].append(doc_id)
 
-    print(f"  {doc_id}  →  topic {topic_id:3d}  [{keywords}]")
+for topic_id in sorted(topic_docs):
+  if topic_id == -1:
+      keywords = "outlier"
+  else:
+      label = topic_model.get_topic(topic_id)
+      keywords = ", ".join(keyword for keyword, _ in label)
+
+  print(f"\nTopic {topic_id}  [{keywords}]:")
+
+  for doc_id in topic_docs[topic_id]:
+      print(f"  {doc_id}")
