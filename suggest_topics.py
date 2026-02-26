@@ -15,9 +15,9 @@ load_dotenv()
 
 transformers.logging.set_verbosity_error()
 
-docs = []
+content_items = []
 
-print("Loading documents...")
+print("Loading content items...")
 
 with open("input.csv", newline="", encoding="utf-8") as f:
     reader = csv.DictReader(f)
@@ -27,12 +27,12 @@ with open("input.csv", newline="", encoding="utf-8") as f:
             separator=" ", strip=True
         )
         body_text_combined_with_double_weighted_title = f"{title} {title} {body_text}".strip()
-        docs.append({
+        content_items.append({
             "id": row["id"],
             "text": body_text_combined_with_double_weighted_title,
         })
 
-print(f"Loaded {len(docs)} documents")
+print(f"Loaded {len(content_items)} content items")
 
 vectorizer = CountVectorizer(
   stop_words="english",
@@ -57,13 +57,13 @@ topic_model = BERTopic(
   representation_model=representation_model,
   calculate_probabilities=True
 )
-topics, probs = topic_model.fit_transform([doc["text"] for doc in docs])
-topic_docs = defaultdict(list)
-for doc, topic_id, prob_array in zip(docs, topics, probs):
-    doc_prob = prob_array[topic_id] if topic_id != -1 else 0
-    topic_docs[topic_id].append((doc["id"], doc_prob))
+topics, probs = topic_model.fit_transform([content_item["text"] for content_item in content_items])
+topic_content_items = defaultdict(list)
+for content_item, topic_id, prob_array in zip(content_items, topics, probs):
+    content_item_prob = prob_array[topic_id] if topic_id != -1 else 0
+    topic_content_items[topic_id].append((content_item["id"], content_item_prob))
 
-for topic_id in sorted(topic_docs):
+for topic_id in sorted(topic_content_items):
   if topic_id == -1:
       keywords = "outlier"
   else:
@@ -72,5 +72,5 @@ for topic_id in sorted(topic_docs):
 
   print(f"\nTopic {topic_id}  [{keywords}]:")
 
-  for doc_id, prob in topic_docs[topic_id]:
-      print(f"  {doc_id}  (prob={prob:.3f})")
+  for content_item_id, prob in topic_content_items[topic_id]:
+      print(f"  {content_item_id}  (prob={prob:.3f})")
