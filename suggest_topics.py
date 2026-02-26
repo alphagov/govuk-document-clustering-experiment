@@ -15,7 +15,7 @@ load_dotenv()
 
 transformers.logging.set_verbosity_error()
 
-doc_ids, texts = [], []
+docs = []
 
 print("Loading documents...")
 
@@ -27,10 +27,12 @@ with open("input.csv", newline="", encoding="utf-8") as f:
             separator=" ", strip=True
         )
         combined_with_double_weighted_title = f"{title} {title} {body_text}".strip()
-        doc_ids.append(row["id"])
-        texts.append(combined_with_double_weighted_title)
+        docs.append({
+            "id": row["id"],
+            "text": combined_with_double_weighted_title,
+        })
 
-print(f"Loaded {len(texts)} documents")
+print(f"Loaded {len(docs)} documents")
 
 vectorizer = CountVectorizer(
   stop_words="english",
@@ -55,12 +57,11 @@ topic_model = BERTopic(
   representation_model=representation_model,
   calculate_probabilities=True
 )
-topics, probs = topic_model.fit_transform(texts)
-
+topics, probs = topic_model.fit_transform([doc["text"] for doc in docs])
 topic_docs = defaultdict(list)
-for doc_id, topic_id, prob_array in zip(doc_ids, topics, probs):
+for doc, topic_id, prob_array in zip(docs, topics, probs):
     doc_prob = prob_array[topic_id] if topic_id != -1 else 0
-    topic_docs[topic_id].append((doc_id, doc_prob))
+    topic_docs[topic_id].append((doc["id"], doc_prob))
 
 for topic_id in sorted(topic_docs):
   if topic_id == -1:
