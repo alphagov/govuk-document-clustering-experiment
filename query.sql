@@ -8,4 +8,6 @@ COPY (
     content_items
   WHERE
     id IN (SELECT id FROM content_item_and_taxons WHERE taxon_base_path = '/employment/labour-market-reform')
+  ORDER BY
+    id
 ) to STDOUT WITH CSV HEADER;
