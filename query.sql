@@ -1,6 +1,7 @@
 COPY (
   SELECT
     id,
+    base_path,
     title,
     details->'body' as body
   FROM

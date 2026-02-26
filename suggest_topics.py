@@ -38,6 +38,8 @@ with open("input.csv", newline="", encoding="utf-8") as f:
         body_text_combined_with_double_weighted_title = f"{title} {title} {body_text}".strip()
         content_items.append({
             "id": row["id"],
+            "base_path": row["base_path"],
+            "title": row["title"],
             "text": body_text_combined_with_double_weighted_title,
         })
 
@@ -70,13 +72,13 @@ topics, probs = topic_model.fit_transform([content_item["text"] for content_item
 topic_content_items = defaultdict(list)
 for content_item, topic_id, prob_array in zip(content_items, topics, probs):
     content_item_prob = prob_array[topic_id] if topic_id != -1 else 0
-    topic_content_items[topic_id].append((content_item["id"], content_item_prob))
+    topic_content_items[topic_id].append((content_item["id"], content_item["base_path"], content_item["title"], content_item_prob))
 
 topic_info = topic_model.get_topic_info()
 topic_names = topic_info.set_index("Topic")["Name"].to_dict()
 
 with open("output.csv", "w", newline="", encoding="utf-8") as f:
-    writer = csv.DictWriter(f, fieldnames=["topic_number", "topic_name", "content_item_id", "probability"])
+    writer = csv.DictWriter(f, fieldnames=["topic_number", "topic_name", "link", "probability", "content_item_id"])
     writer.writeheader()
 
     for topic_id in sorted(topic_content_items):
@@ -85,17 +87,13 @@ with open("output.csv", "w", newline="", encoding="utf-8") as f:
         else:
             name = topic_names.get(topic_id, "Unknown").split("_", 1)[-1]
 
-        writer.writerow({
-          "topic_number": topic_id,
-          "topic_name": name
-        })
-
-        for content_item_id, prob in topic_content_items[topic_id]:
+        for content_item_id, base_path, title, prob in topic_content_items[topic_id]:
             writer.writerow({
-              "content_item_id": content_item_id,
-              "probability": f"{prob:.3f}"
+              "topic_number": topic_id,
+              "topic_name": name,
+              "link": f'=HYPERLINK("https://gov.uk{base_path}","{title.replace('"', '""')}")',
+              "probability": f"{prob:.3f}",
+              "content_item_id": content_item_id
             })
-
-        writer.writerow({})
 
 print("Written to output.csv")
