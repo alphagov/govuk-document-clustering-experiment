@@ -26,10 +26,10 @@ with open("input.csv", newline="", encoding="utf-8") as f:
         body_text = BeautifulSoup(row["body"], "html.parser").get_text(
             separator=" ", strip=True
         )
-        combined_with_double_weighted_title = f"{title} {title} {body_text}".strip()
+        body_text_combined_with_double_weighted_title = f"{title} {title} {body_text}".strip()
         docs.append({
             "id": row["id"],
-            "text": combined_with_double_weighted_title,
+            "text": body_text_combined_with_double_weighted_title,
         })
 
 print(f"Loaded {len(docs)} documents")
