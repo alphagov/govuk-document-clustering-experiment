@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 
 import csv
 import os
+import subprocess
 from bs4 import BeautifulSoup
 from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
@@ -14,6 +15,14 @@ import transformers
 load_dotenv()
 
 transformers.logging.set_verbosity_error()
+
+print("Querying for content items...")
+
+subprocess.run("govuk-docker up -d content-store-lite", shell=True, check=True)
+subprocess.run("docker exec -i govuk-docker-content-store-lite-1 rails db < query.sql > input.csv", shell=True, check=True)
+subprocess.run("govuk-docker down content-store-lite", shell=True, check=True)
+
+print("Writing content items to input.csv...")
 
 content_items = []
 
