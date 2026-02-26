@@ -63,14 +63,16 @@ for content_item, topic_id, prob_array in zip(content_items, topics, probs):
     content_item_prob = prob_array[topic_id] if topic_id != -1 else 0
     topic_content_items[topic_id].append((content_item["id"], content_item_prob))
 
+topic_info = topic_model.get_topic_info()
+topic_names = topic_info.set_index("Topic")["Name"].to_dict()
+
 for topic_id in sorted(topic_content_items):
     if topic_id == -1:
-        keywords = "outlier"
+        name = "Outlier"
     else:
-        label = topic_model.get_topic(topic_id)
-        keywords = ", ".join(keyword for keyword, _ in label)
+        name = topic_names.get(topic_id, "Unknown").split("_", 1)[-1]
 
-    print(f"\nTopic {topic_id}  [{keywords}]:")
+    print(f"\n{topic_id}. {name}:")
 
     for content_item_id, prob in topic_content_items[topic_id]:
         print(f"  {content_item_id}  (prob={prob:.3f})")
