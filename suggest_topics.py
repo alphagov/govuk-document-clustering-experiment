@@ -66,13 +66,27 @@ for content_item, topic_id, prob_array in zip(content_items, topics, probs):
 topic_info = topic_model.get_topic_info()
 topic_names = topic_info.set_index("Topic")["Name"].to_dict()
 
-for topic_id in sorted(topic_content_items):
-    if topic_id == -1:
-        name = "Outlier"
-    else:
-        name = topic_names.get(topic_id, "Unknown").split("_", 1)[-1]
+with open("output.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(f, fieldnames=["topic_number", "topic_name", "content_item_id", "probability"])
+    writer.writeheader()
 
-    print(f"\n{topic_id}. {name}:")
+    for topic_id in sorted(topic_content_items):
+        if topic_id == -1:
+            name = "Outlier"
+        else:
+            name = topic_names.get(topic_id, "Unknown").split("_", 1)[-1]
 
-    for content_item_id, prob in topic_content_items[topic_id]:
-        print(f"  {content_item_id}  (prob={prob:.3f})")
+        writer.writerow({
+          "topic_number": topic_id,
+          "topic_name": name
+        })
+
+        for content_item_id, prob in topic_content_items[topic_id]:
+            writer.writerow({
+              "content_item_id": content_item_id,
+              "probability": f"{prob:.3f}"
+            })
+
+        writer.writerow({})
+
+print("Written to output.csv")
