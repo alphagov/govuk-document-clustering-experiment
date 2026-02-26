@@ -68,7 +68,15 @@ topic_model = BERTopic(
   representation_model=representation_model,
   calculate_probabilities=True
 )
-topics, probs = topic_model.fit_transform([content_item["text"] for content_item in content_items])
+
+docs = [content_item["text"] for content_item in content_items]
+
+topics, probs = topic_model.fit_transform(docs)
+
+topic_model.visualize_topics().write_html("topics.html")
+topic_model.visualize_documents(docs).write_html("documents.html")
+topic_model.visualize_hierarchy().write_html("hierarchy.html")
+
 topic_content_items = defaultdict(list)
 for content_item, topic_id, prob_array in zip(content_items, topics, probs):
     content_item_prob = prob_array[topic_id] if topic_id != -1 else 0
