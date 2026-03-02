@@ -3,12 +3,15 @@ from dotenv import load_dotenv
 import csv
 import os
 import subprocess
+import sys
+
 from bs4 import BeautifulSoup
 from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
 from collections import defaultdict
 from bertopic.representation import OpenAI
 from openai import OpenAI as OpenAIClient
+from jinja2 import Environment, FileSystemLoader
 
 import transformers
 
@@ -16,19 +19,42 @@ load_dotenv()
 
 transformers.logging.set_verbosity_error()
 
+if len(sys.argv) == 1:
+  sys.stderr.write(f"Usage: {sys.argv[0]} <taxon-base-path>\n")
+  sys.exit(1)
+
+taxon_base_path = sys.argv[1]
+
+print(f"Generating query for taxon with path: {taxon_base_path}")
+
+env = Environment(loader=FileSystemLoader("."))
+template = env.get_template("query.sql.jinja")
+sql = template.render(taxon_base_path=taxon_base_path)
+with open("query.sql", "w") as text_file:
+    text_file.write(sql)
+    text_file.write("\n")
+
 print("Querying for content items...")
 
+input_dir_path = f"input{taxon_base_path}"
+input_file_path = f"{input_dir_path}/input.csv"
+os.makedirs(input_dir_path, exist_ok=True)
+
+output_dir_path = f"output{taxon_base_path}"
+output_file_path = f"{output_dir_path}/output.csv"
+os.makedirs(output_dir_path, exist_ok=True)
+
 subprocess.run("govuk-docker up -d content-store-lite", shell=True, check=True)
-subprocess.run("docker exec -i govuk-docker-content-store-lite-1 rails db < query.sql > input.csv", shell=True, check=True)
+subprocess.run(f"docker exec -i govuk-docker-content-store-lite-1 rails db < query.sql > {input_file_path}", shell=True, check=True)
 subprocess.run("govuk-docker down content-store-lite", shell=True, check=True)
 
-print("Writing content items to input.csv...")
+print(f"Writing content items to {input_file_path}...")
 
 content_items = []
 
 print("Loading content items...")
 
-with open("input.csv", newline="", encoding="utf-8") as f:
+with open(input_file_path, newline="", encoding="utf-8") as f:
     reader = csv.DictReader(f)
     for row in reader:
         title = row["title"]
@@ -73,9 +99,9 @@ docs = [content_item["text"] for content_item in content_items]
 
 topics, probs = topic_model.fit_transform(docs)
 
-topic_model.visualize_topics().write_html("topics.html")
-topic_model.visualize_documents(docs).write_html("documents.html")
-topic_model.visualize_hierarchy().write_html("hierarchy.html")
+topic_model.visualize_topics().write_html(f"{output_dir_path}/topics.html")
+topic_model.visualize_documents(docs).write_html(f"{output_dir_path}/documents.html")
+topic_model.visualize_hierarchy().write_html(f"{output_dir_path}/hierarchy.html")
 
 topic_content_items = defaultdict(list)
 for content_item, topic_id, prob_array in zip(content_items, topics, probs):
@@ -85,7 +111,7 @@ for content_item, topic_id, prob_array in zip(content_items, topics, probs):
 topic_info = topic_model.get_topic_info()
 topic_names = topic_info.set_index("Topic")["Name"].to_dict()
 
-with open("output.csv", "w", newline="", encoding="utf-8") as f:
+with open(output_file_path, "w", newline="", encoding="utf-8") as f:
     writer = csv.DictWriter(f, fieldnames=["topic_number", "topic_name", "link", "probability", "content_item_id"])
     writer.writeheader()
 
@@ -104,4 +130,4 @@ with open("output.csv", "w", newline="", encoding="utf-8") as f:
               "content_item_id": content_item_id
             })
 
-print("Written to output.csv")
+print(f"Written to {output_file_path}")
