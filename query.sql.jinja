@@ -1,4 +1,17 @@
 COPY (
+  WITH content_item_and_taxons AS (
+    SELECT
+      id,
+      base_path,
+      document_type,
+      expanded_links,
+      taxons->>'base_path' AS taxon_base_path
+    FROM content_items,
+        jsonb_array_elements(expanded_links->'taxons') AS taxons
+    WHERE taxons->>'base_path' NOT LIKE '/world/%'
+      AND document_type NOT IN ('gone', 'redirect')
+  )
+
   SELECT
     id,
     base_path,
