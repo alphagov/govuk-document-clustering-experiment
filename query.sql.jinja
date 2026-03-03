@@ -16,7 +16,19 @@ COPY (
     id,
     base_path,
     title,
-    details->'body' as body
+    details->'body' as body,
+    (
+      SELECT
+        jsonb_agg(
+          jsonb_build_object(
+            'attachment_type', attachment->>'attachment_type',
+            'content_type', attachment->>'content_type',
+            'url', attachment->>'url'
+          )
+        )
+      FROM
+        jsonb_array_elements(details->'attachments') AS attachment
+    ) AS attachments
   FROM
     content_items
   WHERE
