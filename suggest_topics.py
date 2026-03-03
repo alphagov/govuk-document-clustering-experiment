@@ -62,12 +62,16 @@ with open(input_file_path, newline="", encoding="utf-8") as f:
         body_text = BeautifulSoup(row["body"], "html.parser").get_text(
             separator=" ", strip=True
         )
-        body_text_combined_with_double_weighted_title = f"{title} {title} {body_text}".strip()
+        combined_body_text = "\n".join([
+            f"{title} {title}",
+            body_text,
+        ]).strip()
+
         content_items.append({
             "id": row["id"],
             "base_path": row["base_path"],
             "title": row["title"],
-            "text": body_text_combined_with_double_weighted_title,
+            "text": combined_body_text,
         })
 
 print(f"Loaded {len(content_items)} content items")
