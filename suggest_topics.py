@@ -4,6 +4,7 @@ import csv
 import os
 import subprocess
 import sys
+import tiktoken
 
 from bs4 import BeautifulSoup
 from bertopic import BERTopic
@@ -83,10 +84,15 @@ client = OpenAIClient(
   base_url="https://openrouter.ai/api/v1",
 )
 
+tokenizer = tiktoken.encoding_for_model("gpt-4o-mini")
+
 representation_model = OpenAI(
   client,
   model="openai/gpt-4o-mini",
   chat=True,
+  nr_docs=4,
+  doc_length=2000,
+  tokenizer=tokenizer
 )
 
 topic_model = BERTopic(

@@ -9,6 +9,7 @@ beautifulsoup4 = "*"
 bertopic = "*"
 openai = "*"
 openrouter = "*"
+tiktoken = "*"
 
 [dev-packages]
 
