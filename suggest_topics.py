@@ -4,6 +4,8 @@ import csv
 import os
 import subprocess
 import sys
+import requests
+import json
 import tiktoken
 
 from bs4 import BeautifulSoup
@@ -13,6 +15,9 @@ from collections import defaultdict
 from bertopic.representation import OpenAI
 from openai import OpenAI as OpenAIClient
 from jinja2 import Environment, FileSystemLoader
+from io import BytesIO
+from PyPDF2 import PdfReader
+from PyPDF2.errors import PdfReadError
 
 import transformers
 
@@ -55,6 +60,35 @@ content_items = []
 
 print("Loading content items...")
 
+def extract_text_from_pdf_attachment(url):
+    print(f"Fetching PDF attachment: {url}")
+    response = requests.get(url)
+    pdf_bytes = BytesIO(response.content)
+    try:
+        pdf_reader = PdfReader(pdf_bytes)
+    except PdfReadError as e:
+        print(f"Error reading PDF: {e}")
+        return ""
+
+    full_text = ""
+    for page in pdf_reader.pages:
+        text = page.extract_text()
+        full_text += text + "\n\n"
+    return full_text
+
+def pdf_attachment_urls(attachments_json):
+    try:
+        attachments_data = json.loads(attachments_json)
+    except json.JSONDecodeError:
+        return []
+
+    pdf_urls = [
+        attachment["url"]
+        for attachment in attachments_data
+        if attachment.get("attachment_type") == "file" and attachment.get("content_type") == "application/pdf"
+    ]
+    return pdf_urls
+
 with open(input_file_path, newline="", encoding="utf-8") as f:
     reader = csv.DictReader(f)
     for row in reader:
@@ -65,6 +99,7 @@ with open(input_file_path, newline="", encoding="utf-8") as f:
         combined_body_text = "\n".join([
             f"{title} {title}",
             body_text,
+            *[extract_text_from_pdf_attachment(url) for url in pdf_attachment_urls(row["attachments"])]
         ]).strip()
 
         content_items.append({
