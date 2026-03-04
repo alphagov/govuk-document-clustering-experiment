@@ -12,6 +12,7 @@ openrouter = "*"
 pypdf2 = "*"
 tiktoken = "*"
 requests-cache = "*"
+pycryptodome = "*"
 
 [dev-packages]
 
