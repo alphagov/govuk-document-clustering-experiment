@@ -7,6 +7,7 @@ import sys
 import requests
 import json
 import tiktoken
+import requests_cache
 
 from bs4 import BeautifulSoup
 from bertopic import BERTopic
@@ -30,6 +31,8 @@ if len(sys.argv) == 1:
   sys.exit(1)
 
 taxon_base_path = sys.argv[1]
+
+requests_cache.install_cache()
 
 print(f"Generating query for taxon with path: {taxon_base_path}")
 

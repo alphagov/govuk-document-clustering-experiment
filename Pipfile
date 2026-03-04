@@ -11,6 +11,7 @@ openai = "*"
 openrouter = "*"
 pypdf2 = "*"
 tiktoken = "*"
+requests-cache = "*"
 
 [dev-packages]
 
