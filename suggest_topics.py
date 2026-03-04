@@ -75,7 +75,11 @@ def extract_text_from_pdf_attachment(url):
 
     full_text = ""
     for page in pdf_reader.pages:
-        text = page.extract_text()
+        try:
+            text = page.extract_text()
+        except IndexError as e:
+            print(f"Failed to extract text from PDF page: {e}")
+            text = ""
         full_text += text + "\n\n"
     return full_text
 
