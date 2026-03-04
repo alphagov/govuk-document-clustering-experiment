@@ -89,6 +89,34 @@ def pdf_attachment_urls(attachments_json):
     ]
     return pdf_urls
 
+def extract_text_from_html_attachment(path):
+    print(f"Fetching HTML attachment: {path}")
+    response = requests.get(f"https://www.gov.uk/api/content{path}")
+    attachment = response.json()
+    title = attachment["title"]
+    body = attachment["details"]["body"]
+    body_text = BeautifulSoup(body, "html.parser").get_text(
+        separator=" ", strip=True
+    )
+    combined_body_text = "\n".join([
+        f"{title} {title}",
+        body_text
+    ]).strip()
+    return combined_body_text
+
+def html_attachment_paths(attachments_json):
+    try:
+        attachments_data = json.loads(attachments_json)
+    except json.JSONDecodeError:
+        return []
+
+    paths = [
+        attachment["url"]
+        for attachment in attachments_data
+        if attachment.get("attachment_type") == "html"
+    ]
+    return paths
+
 with open(input_file_path, newline="", encoding="utf-8") as f:
     reader = csv.DictReader(f)
     for row in reader:
@@ -99,7 +127,8 @@ with open(input_file_path, newline="", encoding="utf-8") as f:
         combined_body_text = "\n".join([
             f"{title} {title}",
             body_text,
-            *[extract_text_from_pdf_attachment(url) for url in pdf_attachment_urls(row["attachments"])]
+            *[extract_text_from_pdf_attachment(url) for url in pdf_attachment_urls(row["attachments"])],
+            *[extract_text_from_html_attachment(url) for url in html_attachment_paths(row["attachments"])]
         ]).strip()
 
         content_items.append({
