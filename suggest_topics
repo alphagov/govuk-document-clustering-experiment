@@ -5,11 +5,11 @@ from dotenv import load_dotenv
 import csv
 import os
 import subprocess
-import sys
 import requests
 import json
 import tiktoken
 import requests_cache
+import argparse
 
 from bs4 import BeautifulSoup
 from bertopic import BERTopic
@@ -24,15 +24,17 @@ from PyPDF2.errors import PdfReadError
 
 import transformers
 
+parser = argparse.ArgumentParser(
+    description="Identifies clusters in the documents belonging to the specified topic taxon."
+)
+parser.add_argument("taxon_base_path", help="The base path of the topic taxon to consider.")
+args = parser.parse_args()
+
 load_dotenv()
 
 transformers.logging.set_verbosity_error()
 
-if len(sys.argv) == 1:
-  sys.stderr.write(f"Usage: {sys.argv[0]} <taxon-base-path>\n")
-  sys.exit(1)
-
-taxon_base_path = sys.argv[1]
+taxon_base_path = args.taxon_base_path
 
 requests_cache.install_cache()
 
