@@ -28,6 +28,16 @@ parser = argparse.ArgumentParser(
     description="Identifies clusters in the documents belonging to the specified topic taxon."
 )
 parser.add_argument("taxon_base_path", help="The base path of the topic taxon to consider.")
+parser.add_argument(
+    "--with-pdf-attachments",
+    action="store_true",
+    help="include content from PDF attachments (default: exclude content from PDF attachments)"
+)
+parser.add_argument(
+    "--with-html-attachments",
+    action="store_true",
+    help="include content from HTML attachments (default: exclude content from HTML attachments)"
+)
 args = parser.parse_args()
 
 load_dotenv()
@@ -88,6 +98,9 @@ def extract_text_from_pdf_attachment(url):
     return full_text
 
 def pdf_attachment_urls(attachments_json):
+    if not args.with_pdf_attachments:
+        return []
+
     try:
         attachments_data = json.loads(attachments_json)
     except json.JSONDecodeError:
@@ -116,6 +129,9 @@ def extract_text_from_html_attachment(path):
     return combined_body_text
 
 def html_attachment_paths(attachments_json):
+    if not args.with_html_attachments:
+        return []
+
     try:
         attachments_data = json.loads(attachments_json)
     except json.JSONDecodeError:
