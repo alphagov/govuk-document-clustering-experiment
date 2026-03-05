@@ -38,7 +38,17 @@ parser.add_argument(
     action="store_true",
     help="include content from HTML attachments (default: exclude content from HTML attachments)"
 )
+parser.add_argument(
+    "--number-of-topics",
+    help="target number of topics (integer or 'auto') for topic reduction step (default: None)"
+)
 args = parser.parse_args()
+
+if args.number_of_topics is not None and args.number_of_topics.lower() != "auto":
+    try:
+        args.number_of_topics = int(args.number_of_topics)
+    except ValueError:
+        raise ValueError("--number-of-topics must be an integer or 'auto'")
 
 load_dotenv()
 
@@ -192,6 +202,7 @@ representation_model = OpenAI(
 
 topic_model = BERTopic(
   vectorizer_model=vectorizer,
+  nr_topics=args.number_of_topics,
   representation_model=representation_model,
   calculate_probabilities=True
 )
