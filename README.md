@@ -11,4 +11,4 @@ Feasibility of using machine classification to improve GOV.UK taxonomy
 * Copy example environment file: `cp .env.example .env`.
 * Set value of `HF_TOKEN` in `.env` to the Hugging Face token.
 * Set the value of `OPENROUTER_API_KEY` in `.env` to the [Open Router](https://openrouter.ai) API key.
-* Generate the suggested topics: `pipenv run python suggest_topics.py <taxon-base-path>`
+* Generate the suggested topics: `pipenv run ./suggest_topics <taxon-base-path>`
