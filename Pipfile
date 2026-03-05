@@ -13,6 +13,7 @@ pypdf2 = "*"
 tiktoken = "*"
 requests-cache = "*"
 pycryptodome = "*"
+datamapplot = "*"
 
 [dev-packages]
 

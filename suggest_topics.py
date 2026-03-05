@@ -184,6 +184,9 @@ topic_model.visualize_topics().write_html(f"{output_dir_path}/topics.html")
 topic_model.visualize_documents(docs, hide_document_hover=True).write_html(f"{output_dir_path}/documents.html")
 topic_model.visualize_hierarchy().write_html(f"{output_dir_path}/hierarchy.html")
 
+figure = topic_model.visualize_document_datamap(docs, interactive=True)
+figure.save(f"{output_dir_path}/document_datamap.html")
+
 topic_content_items = defaultdict(list)
 for content_item, topic_id, prob_array in zip(content_items, topics, probs):
     content_item_prob = prob_array[topic_id] if topic_id != -1 else 0
