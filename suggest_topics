@@ -77,9 +77,10 @@ output_dir_path = f"output{taxon_base_path}"
 output_file_path = f"{output_dir_path}/output.csv"
 os.makedirs(output_dir_path, exist_ok=True)
 
-subprocess.run("govuk-docker up -d content-store-lite", shell=True, check=True)
-subprocess.run(f"docker exec -i govuk-docker-content-store-lite-1 rails db < query.sql > {input_file_path}", shell=True, check=True)
-subprocess.run("govuk-docker down content-store-lite", shell=True, check=True)
+if not os.path.exists(input_file_path):
+    subprocess.run("govuk-docker up -d content-store-lite", shell=True, check=True)
+    subprocess.run(f"docker exec -i govuk-docker-content-store-lite-1 rails db < query.sql > {input_file_path}", shell=True, check=True)
+    subprocess.run("govuk-docker down content-store-lite", shell=True, check=True)
 
 print(f"Writing content items to {input_file_path}...")
 
