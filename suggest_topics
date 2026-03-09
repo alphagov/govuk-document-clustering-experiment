@@ -241,20 +241,20 @@ for content_item, topic_id, prob_array in zip(content_items, topics, probs):
 topic_info = topic_model.get_topic_info()
 topic_names = dict(zip(topic_info['Topic'], topic_info['Representation'].str[0]))
 
+def get_topic_name(topic_id):
+    if topic_id == -1:
+        return "Outlier"
+    return topic_names.get(topic_id, "Unknown")
+
 with open(f"{output_dir_path}/output.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.DictWriter(f, fieldnames=["topic_number", "topic_name", "link", "probability", "content_item_id"])
     writer.writeheader()
 
     for topic_id in sorted(topic_content_items):
-        if topic_id == -1:
-            name = "Outlier"
-        else:
-            name = topic_names.get(topic_id, "Unknown")
-
         for content_item_id, base_path, title, prob in topic_content_items[topic_id]:
             writer.writerow({
               "topic_number": topic_id,
-              "topic_name": name,
+              "topic_name": get_topic_name(topic_id),
               "link": f'=HYPERLINK("https://gov.uk{base_path}","{title.replace('"', '""')}")',
               "probability": f"{prob:.3f}",
               "content_item_id": content_item_id
