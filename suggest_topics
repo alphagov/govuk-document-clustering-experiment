@@ -247,7 +247,13 @@ def get_topic_name(topic_id):
     return topic_names.get(topic_id, "Unknown")
 
 with open(f"{output_dir_path}/output.csv", "w", newline="", encoding="utf-8") as f:
-    writer = csv.DictWriter(f, fieldnames=["topic_number", "topic_name", "link", "probability", "content_item_id"])
+    writer = csv.DictWriter(f, fieldnames=[
+        "topic_number",
+        "topic_name",
+        "link",
+        "probability",
+        "content_item_id"
+    ])
     writer.writeheader()
 
     for topic_id in sorted(topic_content_items):
