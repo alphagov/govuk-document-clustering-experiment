@@ -13,6 +13,7 @@ import argparse
 import random
 import numpy
 import secrets
+import transformers
 
 from bs4 import BeautifulSoup
 from bertopic import BERTopic
@@ -25,8 +26,6 @@ from io import BytesIO
 from PyPDF2 import PdfReader
 from PyPDF2.errors import PdfReadError
 from umap import UMAP
-
-import transformers
 
 parser = argparse.ArgumentParser(
     description="Identifies clusters in the documents belonging to the specified topic taxon."
