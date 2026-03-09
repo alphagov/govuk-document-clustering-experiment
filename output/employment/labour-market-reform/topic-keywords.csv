@@ -1,20 +1,13 @@
 topic_number,topic_keywords,number_of_content_items
 -1,,239
-0,"pay,wage,failed pay,failed,workers,minimum,minimum wage,national,worker,limited",184
-1,"employment,labour,rights,enforcement,businesses,market,work,labour market,business,employers",147
-2,"skills,training,young,young people,people,education,learning,work,employers,survey",88
-3,"leave,parental,parental leave,parents,shared,shared parental,flexible,working,weeks,time",66
-4,"projections,labour market,market,futures,labour,future,ukces,uk,uk labour,occupation",40
-5,"cac,outcome,panel,unite,union,set nn,considerations,panel members,case manager,names",37
-6,"modernisation,project,fund,union,round,case study,study,individual,aimed,equality",25
-7,"eas,employment agency,agency,agencies,employment,inspectorate,agency standards,standards,employment agencies,eas inspectorate",25
-8,"tribunal,employment tribunal,employment,tribunals,review,rules,claimants,justice,fees,employment tribunals",21
-9,"employee,ownership,request,consultation,owner,status,implementing,response,employees,review",19
-10,"cac,complaint,ballot,employer,application,make complaint,make,information,information consultation,make application",17
-11,"acas,council,independent,member,members,chair,relations,paul,brendan,nn acas",15
-12,"regional,development,economic performance,land,agencies,property,homes,transfer,statement,performance",14
-13,"service,strike,levels,services,strikes,minimum,rail,public,action,regulations",13
-14,"trade union,trade,membership,statistics,union,survey,density,information,bis,force survey",13
-15,"zero hours,contracts,zero,hours,hours contracts,exclusivity,exclusivity clauses,clauses,ban,consultation",13
-16,"flexible,flexible working,working,request,work,right,employers,employees,flexibility,request flexible",11
-17,"statistics,official statistics,official,labour,market statistics,produced,labour market,influence,market,free",11
+0,"employment,labour,government,rights,work,enforcement,businesses,employers,trade,market",213
+1,"pay,wage,failed pay,failed,minimum,minimum wage,national,worker,limited,trading",184
+2,"skills,young,training,people,young people,uk,market,ukces,labour market,labour",139
+3,"leave,parental,parental leave,parents,shared,shared parental,flexible,working,work,time",66
+4,"cac,outcome,panel,unite,union,set nn,considerations,panel members,case manager,names",37
+5,"modernisation,project,fund,union,round,case study,study,individual,aimed,equality",25
+6,"eas,employment agency,agency,employment,agencies,inspectorate,agency standards,standards,employment agencies,eas inspectorate",25
+7,"flexible,flexible working,working,hours,contracts,zero hours,zero,hours contracts,work,exclusivity",24
+8,"cac,complaint,ballot,employer,application,make complaint,information consultation,make application,nn employer,union",17
+9,"acas,council,independent,members,member,chair,relations,paul,brendan,nn acas",15
+10,"regional,development,economic performance,land,agencies,property,transfer,homes,performance,communities",14
