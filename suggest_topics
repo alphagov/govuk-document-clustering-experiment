@@ -10,6 +10,9 @@ import json
 import tiktoken
 import requests_cache
 import argparse
+import random
+import numpy
+import secrets
 
 from bs4 import BeautifulSoup
 from bertopic import BERTopic
@@ -21,6 +24,7 @@ from jinja2 import Environment, FileSystemLoader
 from io import BytesIO
 from PyPDF2 import PdfReader
 from PyPDF2.errors import PdfReadError
+from umap import UMAP
 
 import transformers
 
@@ -42,6 +46,11 @@ parser.add_argument(
     "--number-of-topics",
     help="target number of topics (integer or 'auto') for topic reduction step (default: None)"
 )
+parser.add_argument(
+    "--seed",
+    type=int,
+    help="seed for random number generators for more deterministic behaviour"
+)
 args = parser.parse_args()
 
 if args.number_of_topics is not None and args.number_of_topics.lower() != "auto":
@@ -49,6 +58,13 @@ if args.number_of_topics is not None and args.number_of_topics.lower() != "auto"
         args.number_of_topics = int(args.number_of_topics)
     except ValueError:
         raise ValueError("--number-of-topics must be an integer or 'auto'")
+
+if args.seed is None:
+    args.seed = secrets.randbits(32)
+
+random.seed(args.seed)
+numpy.random.default_rng(args.seed)
+print(f"Using seed value: {args.seed}")
 
 load_dotenv()
 
@@ -185,6 +201,8 @@ vectorizer = CountVectorizer(
   ngram_range=(1,2)
 )
 
+umap_model = UMAP(random_state=args.seed)
+
 client = OpenAIClient(
   api_key=os.environ.get("OPENROUTER_API_KEY"),
   base_url="https://openrouter.ai/api/v1",
@@ -203,6 +221,7 @@ representation_model = OpenAI(
 
 topic_model = BERTopic(
   vectorizer_model=vectorizer,
+  umap_model=umap_model,
   nr_topics=args.number_of_topics,
   representation_model=representation_model,
   calculate_probabilities=True
