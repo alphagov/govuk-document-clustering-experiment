@@ -221,13 +221,22 @@ topic_model = BERTopic(
   vectorizer_model=vectorizer,
   umap_model=umap_model,
   nr_topics=args.number_of_topics,
-  representation_model=representation_model,
   calculate_probabilities=True
 )
 
 docs = [content_item["text"] for content_item in content_items]
 
 topics, probs = topic_model.fit_transform(docs)
+
+topic_info = topic_model.get_topic_info()
+topic_keywords = dict(zip(topic_info['Topic'], topic_info['Representation']))
+
+def get_topic_keywords(topic_id):
+    if topic_id == -1:
+        return []
+    return topic_keywords.get(topic_id, [])
+
+topic_model.update_topics(docs, representation_model=representation_model)
 
 topic_model.visualize_topics().write_html(f"{output_dir_path}/topics.html")
 topic_model.visualize_documents(docs, hide_document_hover=True).write_html(f"{output_dir_path}/documents.html")
@@ -245,6 +254,20 @@ def get_topic_name(topic_id):
     if topic_id == -1:
         return "Outlier"
     return topic_names.get(topic_id, "Unknown")
+
+with open(f"{output_dir_path}/topic-keywords.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(f, fieldnames=[
+        "topic_number",
+        "topic_keywords",
+        "number_of_content_items"
+    ])
+    writer.writeheader()
+    for topic_id in sorted(topic_names):
+        writer.writerow({
+            "topic_number": topic_id,
+            "topic_keywords": ",".join(get_topic_keywords(topic_id)),
+            "number_of_content_items": len(topic_content_items[topic_id])
+        })
 
 with open(f"{output_dir_path}/topic-names.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.DictWriter(f, fieldnames=[
