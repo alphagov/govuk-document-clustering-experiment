@@ -246,6 +246,20 @@ def get_topic_name(topic_id):
         return "Outlier"
     return topic_names.get(topic_id, "Unknown")
 
+with open(f"{output_dir_path}/topic-names.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.DictWriter(f, fieldnames=[
+        "topic_number",
+        "topic_name",
+        "number_of_content_items"
+    ])
+    writer.writeheader()
+    for topic_id in sorted(topic_names):
+        writer.writerow({
+            "topic_number": topic_id,
+            "topic_name": get_topic_name(topic_id),
+            "number_of_content_items": len(topic_content_items[topic_id])
+        })
+
 with open(f"{output_dir_path}/output.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.DictWriter(f, fieldnames=[
         "topic_number",
