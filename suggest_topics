@@ -208,13 +208,17 @@ client = OpenAIClient(
 
 tokenizer = tiktoken.encoding_for_model("gpt-4o-mini")
 
+with open('prompt.txt', 'r', encoding='utf-8') as file:
+    prompt = file.read()
+
 representation_model = OpenAI(
   client,
   model="openai/gpt-4o-mini",
   chat=True,
   nr_docs=4,
   doc_length=2000,
-  tokenizer=tokenizer
+  tokenizer=tokenizer,
+  prompt=prompt
 )
 
 topic_model = BERTopic(
