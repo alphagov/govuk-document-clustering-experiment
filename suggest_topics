@@ -89,7 +89,6 @@ input_file_path = f"{input_dir_path}/input.csv"
 os.makedirs(input_dir_path, exist_ok=True)
 
 output_dir_path = f"output{taxon_base_path}"
-output_file_path = f"{output_dir_path}/output.csv"
 os.makedirs(output_dir_path, exist_ok=True)
 
 if not os.path.exists(input_file_path):
@@ -242,7 +241,7 @@ for content_item, topic_id, prob_array in zip(content_items, topics, probs):
 topic_info = topic_model.get_topic_info()
 topic_names = dict(zip(topic_info['Topic'], topic_info['Representation'].str[0]))
 
-with open(output_file_path, "w", newline="", encoding="utf-8") as f:
+with open(f"{output_dir_path}/output.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.DictWriter(f, fieldnames=["topic_number", "topic_name", "link", "probability", "content_item_id"])
     writer.writeheader()
 
@@ -260,5 +259,3 @@ with open(output_file_path, "w", newline="", encoding="utf-8") as f:
               "probability": f"{prob:.3f}",
               "content_item_id": content_item_id
             })
-
-print(f"Written to {output_file_path}")
