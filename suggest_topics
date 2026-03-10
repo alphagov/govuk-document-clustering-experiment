@@ -255,7 +255,7 @@ topic_names = dict(zip(topic_info['Topic'], topic_info['Representation'].str[0])
 
 def get_topic_name(topic_id):
     if topic_id == -1:
-        return "Outlier"
+        return "Outliers"
     return topic_names.get(topic_id, "Unknown")
 
 with open(f"{output_dir_path}/topic-keywords.csv", "w", newline="", encoding="utf-8") as f:
