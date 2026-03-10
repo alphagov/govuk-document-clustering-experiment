@@ -175,6 +175,7 @@ def html_attachment_paths(attachments_json):
     return paths
 
 with open(input_file_path, newline="", encoding="utf-8") as f:
+    csv.field_size_limit(10 * 1024 * 1024)
     reader = csv.DictReader(f)
     for row in reader:
         title = row["title"]
