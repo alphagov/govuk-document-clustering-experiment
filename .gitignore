@@ -1,3 +1,4 @@
 .env
 query.sql
 http_cache.sqlite
+output
