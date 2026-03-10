@@ -248,8 +248,7 @@ topic_model.visualize_hierarchy().write_html(f"{output_dir_path}/hierarchy.html"
 
 topic_content_items = defaultdict(list)
 for content_item, topic_id, prob_array in zip(content_items, topics, probs):
-    content_item_prob = prob_array[topic_id] if topic_id != -1 else 0
-    topic_content_items[topic_id].append((content_item["id"], content_item["base_path"], content_item["title"], content_item_prob))
+    topic_content_items[topic_id].append((content_item["id"], content_item["base_path"], content_item["title"], prob_array[topic_id]))
 
 topic_info = topic_model.get_topic_info()
 topic_names = dict(zip(topic_info['Topic'], topic_info['Representation'].str[0]))
