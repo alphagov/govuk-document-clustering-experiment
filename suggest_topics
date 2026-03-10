@@ -290,8 +290,9 @@ with open(f"{output_dir_path}/output.csv", "w", newline="", encoding="utf-8") as
     writer = csv.DictWriter(f, fieldnames=[
         "topic_number",
         "topic_name",
-        "link",
-        "probability",
+        "content_item_title",
+        "content_item_url",
+        "content_item_probability",
         "content_item_id"
     ])
     writer.writeheader()
@@ -301,7 +302,8 @@ with open(f"{output_dir_path}/output.csv", "w", newline="", encoding="utf-8") as
             writer.writerow({
               "topic_number": topic_id,
               "topic_name": get_topic_name(topic_id),
-              "link": f'=HYPERLINK("https://gov.uk{base_path}","{title.replace('"', '""')}")',
-              "probability": f"{prob:.3f}",
+              "content_item_title": title,
+              "content_item_url": f"https://gov.uk{base_path}",
+              "content_item_probability": f"{prob:.3f}",
               "content_item_id": content_item_id
             })
