@@ -312,3 +312,9 @@ with open(f"{output_dir_path}/output.csv", "w", newline="", encoding="utf-8") as
               "content_item_probability": f"{prob:.3f}",
               "content_item_id": content_item_id
             })
+
+template = env.get_template("output.html.jinja")
+html = template.render(topic_title=args.topic_title)
+with open(f"{output_dir_path}/output.html", "w") as f:
+    f.write(html)
+    f.write("\n")
