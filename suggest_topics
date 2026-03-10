@@ -32,6 +32,11 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument("taxon_base_path", help="The base path of the topic taxon to consider.")
 parser.add_argument(
+    "--topic-title",
+    default="Topic",
+    help="title of topic taxon to consider (default: 'Topic')"
+)
+parser.add_argument(
     "--with-pdf-attachments",
     action="store_true",
     help="include content from PDF attachments (default: exclude content from PDF attachments)"
