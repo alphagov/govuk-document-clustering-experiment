@@ -46,3 +46,10 @@ The clustering script was run with the following variations:
 The results for each of the selected topics can be viewed here:
 * [Work > Labour market reform](./employment/labour-market-reform/)
 * [Going and being abroad > Travel abroad](./going-and-being-abroad/travel-abroad/)
+
+## Further work
+
+* As recommended in the warning in [the BERTopic documentation for topic reduction](https://maartengr.github.io/BERTopic/getting_started/topicreduction/topicreduction.html), it might be better to tune the `min_cluster_size` & `nr_topics` parameters to reduce the number of clusters at an earlier stage of the process. Apparently [HDBSCAN](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.HDBSCAN.html) (used by BERTopic by default) is quite sensitive to the values of these two parameters relative to the text being clustered. It might be worth using [TopicTuner](https://github.com/drob-xx/TopicTuner) to optimize the values.
+* Allow the user to modify the suggested topic names and then re-run the script using the new values as seed topics.
+* Include content from PDF/HTML attachments. The script already supports this with the `--with-pdf-attachments` & `--with-html-attachments` command line options.
+* Modify the LLM prompt to generate topic descriptions as well as names.
