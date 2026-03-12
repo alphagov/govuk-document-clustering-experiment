@@ -1,4 +1,4 @@
-# gds-document-clustering
+# GOV.UK Document Clustering Experiment
 
 Feasibility of using machine classification to improve GOV.UK taxonomy
 
