@@ -5,7 +5,7 @@ title: Home
 
 ## Introduction
 
-This website documents some document clustering experiments that were run against [the GOV.UK Topic Taxonomy](https://docs.publishing.service.gov.uk/manual/taxonomy.html) using the Python [BERTopic library](https://maartengr.github.io/BERTopic/) via the code in [this GitHub repository](https://github.com/freerange/gds-document-clustering).
+This website documents some document clustering experiments that were run against [the GOV.UK Topic Taxonomy](https://docs.publishing.service.gov.uk/manual/taxonomy.html) using the Python [BERTopic library](https://maartengr.github.io/BERTopic/) via the code in [this GitHub repository](https://github.com/alphagov/govuk-document-clustering-experiment).
 
 [The Taxonomy Health page](https://content-tagger.integration.publishing.service.gov.uk/taxonomy/health_warnings) in the [Content Tagger application](https://docs.publishing.service.gov.uk/repos/content-tagger.html) indicates that a significant number of taxons have "too much content tagged to them", i.e. they are associated with [more than 300 content items](https://github.com/alphagov/content-tagger/blob/2f41491c37a6e0f986efdce19da5d64a58db9acd/config/health_checks.yml#L7-L10).
 
@@ -28,7 +28,7 @@ The BERTopic clustering script was run against the data for these example taxons
 * English stop words were excluded from the keywords generated for each cluster.
 * The keywords for each cluster were constrained to be either one or two words.
 * They keywords for each cluster were converted into human-friendly topic names by using the built-in LLM integration (using Open AI's `gpt-4o-mini` model) with 4 example documents for each cluster limited to 2,000 tokens per document.
-* The default LLM prompt was [simplified](https://github.com/freerange/gds-document-clustering/commit/aaab3ebc4ff19150ea596cf489b527dad63bc0c3), but the "three words at most" constraint (for the topic name) was initially left in place.
+* The default LLM prompt was [simplified](https://github.com/alphagov/govuk-document-clustering-experiment/commit/aaab3ebc4ff19150ea596cf489b527dad63bc0c3), but the "three words at most" constraint (for the topic name) was initially left in place.
 * The documents not in a cluster were listed under an "Outliers" topic.
 
 ## Configuration variations
