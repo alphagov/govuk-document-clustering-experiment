@@ -15,3 +15,7 @@ Feasibility of using machine classification to improve GOV.UK taxonomy
 * Set value of `HF_TOKEN` in `.env` to the Hugging Face token.
 * Set the value of `OPENROUTER_API_KEY` in `.env` to the [Open Router](https://openrouter.ai) API key.
 * Generate the suggested topics: `pipenv run ./suggest_topics <taxon-base-path>`
+
+## Documentation
+
+This repo is configured to generate a GitHub Pages website which is currently hosted at https://alphagov.github.io/govuk-document-clustering-experiment/. This provides some detail about how we ran some experiments using this code and the corresponding results.
